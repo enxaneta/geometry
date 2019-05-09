@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Intersection point of two lines</title>
+<style>
+body {
+  background-color: #222;
+}
+canvas {
+  background-color: #000;
+  display: block;
+  margin: auto;
+  position:absolute;
+  top:0;bottom:0;left:0;right:0;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<script>
+//setup
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var cw = canvas.width = 400,
+  cx = cw / 2;
+var ch = canvas.height = 400,
+  cy = ch / 2;
+ctx.strokeStyle = "#fff";
+
+//points used to draw the two lines
+var p1 = {x:100,y:100};
+var p2 = {x:300,y:250};
+var p3 = {x:100,y:300};
+var p4 = {x:300,y:170};
+
+//draw the 2 lines
+drawLine(p1,p2);
+drawLine(p3,p4);
+
+///////////////////////////////////////////////////////////////////////////////////
+/*a function to detect if 2 lines intersect
+ takes 4 points: 
+ p1 p2 used to draw the first line
+ p3 p4 used to draw the second line
+ returns the intersection point or false
+*/
+
+function Intersect(p1,p2,p3,p4){
+  var denominator = (p4.y - p3.y)*(p2.x - p1.x) - (p4.x - p3.x)*(p2.y - p1.y);
+  var ua = ((p4.x - p3.x)*(p1.y - p3.y) - (p4.y - p3.y)*(p1.x - p3.x))/denominator;
+  var ub = ((p2.x - p1.x)*(p1.y - p3.y) - (p2.y - p1.y)*(p1.x - p3.x))/denominator;
+  var x = p1.x + ua*(p2.x - p1.x);
+  var y = p1.y + ua*(p2.y - p1.y);
+  if(ua > 0 && ua < 1 && ub > 0  && ub < 1){
+  return {x:x,y:y};
+  }else{return false;}
+}
+///////////////////////////////////////////////////////////////////////////////////
+  
+  
+  var o = Intersect(p1,p2,p3,p4);
+  
+
+  //if the lines intersect draw a circle to mark the point
+  if(o){  
+  ctx.beginPath();
+  ctx.arc(o.x, o.y,3,0,2*Math.PI);
+  ctx.stroke();}
+
+
+
+function drawLine(p1,p2){
+  ctx.beginPath();
+  ctx.moveTo(p1.x,p1.y);
+  ctx.lineTo(p2.x,p2.y);
+  ctx.stroke();
+}
+</script>
+
+</body>
+</html>
