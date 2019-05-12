@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Intersection of two circles</title>
+<style>
+body {
+  background-color: #222;
+}
+canvas {
+  background-color: #000;
+  display: block;
+  margin: auto;
+  position:absolute;
+  top:0;bottom:0;left:0;right:0;
+}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+var cw = (canvas.width = 400);
+var ch = (canvas.height = 400);
+
+var c1 = { x: 320, y: 290, r: 90 }; //first circle
+var c2 = { x: 160, y: 180, r: 140 }; //second circle
+
+drawCircle(c1);
+drawCircle(c2);
+
+let points = circlesIntersection(c1, c2);
+
+if (points.length > 0) {
+  points.forEach(p => {
+    markPoint(p);
+  });
+}
+
+//a function to detect the intersection of 2 circles: returns an array of 2 points
+function circlesIntersection(c1, c2) {
+  let d = dist(c1, c2);
+  let p3 = {},
+    p4 = {},
+    p5 = {};
+  if (d < c1.r + c2.r && d > Math.abs(c1.r - c2.r)) {
+    var a = (Math.pow(c1.r, 2) - Math.pow(c2.r, 2) + Math.pow(d, 2)) / (2 * d);
+    var h = Math.sqrt(Math.pow(c1.r, 2) - Math.pow(a, 2));
+
+    p3.x = c1.x + a * (c2.x - c1.x) / d;
+    p3.y = c1.y + a * (c2.y - c1.y) / d;
+
+    p4.x = p3.x + h * (c2.y - c1.y) / d;
+    p4.y = p3.y - h * (c2.x - c1.x) / d;
+
+    p5.x = p3.x - h * (c2.y - c1.y) / d;
+    p5.y = p3.y + h * (c2.x - c1.x) / d;
+
+    return [p4, p5];
+  } else {
+    return false;
+  }
+}
+
+function drawCircle(c) {
+  ctx.strokeStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, c.r, 0, 2 * Math.PI);
+  ctx.stroke();
+}
+function markPoint(p) {
+  ctx.fillStyle = "gold";
+  ctx.beginPath();
+  ctx.arc(p.x, p.y, 3, 0, 2 * Math.PI);
+  ctx.fill();
+}
+function dist(p1, p2) {
+  var dx = p2.x - p1.x;
+  var dy = p2.y - p1.y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+</script>
+</body>
+</html>
